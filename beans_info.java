@@ -43,3 +43,15 @@ public Person(@Qualifier("nameIdPreferredBean") Pet pet) {
     this.pet = pet;
 }
 
+@Value
+------
+// возможность задать значение параметров без геттеров и сеттеров
+
+                // Hard code
+@Value("Vasya")
+private String name;
+
+                // use variable "person.name" from file someFile.properties
+                // applicationContext.xml:    <context:property-placeholder location="classpath:myApp.properties"/>
+@Value("${person.name}")
+private String name;
