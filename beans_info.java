@@ -55,3 +55,35 @@ private String name;
                 // applicationContext.xml:    <context:property-placeholder location="classpath:myApp.properties"/>
 @Value("${person.name}")
 private String name;
+
+@Scope
+------
+// жизненный цикл bean, определяет кол-во создаваемых бинов
+// дополняет аннотацию @Component
+@Scope("singleton") по умолчанию
+@Scope("prototype")
+@Scope("request")
+@Scope("session")
+@Scope("global_session")
+
+@PostConstructor
+----------------
+// вызывается после создания bean
+// deprecated в Java 9. удален в Java 11
+  
+@PreDestroy
+-----------
+// вызывается перед остановкой приложения (при условии, что Scope не "prototype")
+// deprecated в Java 9. удален в Java 11
+
+@Configuration
+--------------
+// объявляет класс конфигурацией
+
+@ComponentScan
+--------------
+@ComponentScan("com.mikhail.spring.spring_introduction") // в каком пакете производить сканирование
+
+// Способы получения контекста:
+ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
