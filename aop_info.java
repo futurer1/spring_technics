@@ -54,3 +54,22 @@ private void returnMagazineFromUniLibrary4() {      // назвали второ
 @Pointcut("allMethodsFromUniLibrary4() && !returnMagazineFromUniLibrary4()")  // использовали один с исключением второго
 private void allMethodsExceptReturnMagazineFromUniLibrary() {
 }
+
+@Order
+------
+// выставление приоритета применения аспекта. Применяется к классу аспекта @Aspect. 
+// Чем меньше число, тем выше приоритет. Это int значение.
+@Order(1)
+@Order(20)
+@Order(-5)
+
+Join Point
+----------
+// получение информации о том, откуда был вызван Advice. В параметрах метода можно 
+// получить информацию о сигнатуре метода и значениях параметров бизнес-логики
+MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+methodSignature                 // void aop.joinpoint.UniLibrary.addBook(String,Book)
+methodSignature.getMethod()     // public void aop.joinpoint.UniLibrary.addBook(java.lang.String,aop.joinpoint.Book)
+methodSignature.getReturnType() // void
+methodSignature.getName()       // addBook
+
