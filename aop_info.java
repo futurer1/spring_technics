@@ -40,4 +40,17 @@ execution(modifiers-pattern? return-type-pattern declaring-type-pattern? method-
 @Before("allGetMethods()")        // использование Pointcut в @Aspect
 public void beforeGetLoggingAdvice() {
 }
-  
+
+Комбинация из Pointcut-ов с условиями && || ! :
+-----------------------------------------------
+@Pointcut("execution(* aop.UniLibrary4.*(..))")
+private void allMethodsFromUniLibrary4() {          // назвали один
+}
+
+@Pointcut("execution(public void aop.UniLibrary4.returnMagazine())")
+private void returnMagazineFromUniLibrary4() {      // назвали второй
+}
+
+@Pointcut("allMethodsFromUniLibrary4() && !returnMagazineFromUniLibrary4()")  // использовали один с исключением второго
+private void allMethodsExceptReturnMagazineFromUniLibrary() {
+}
