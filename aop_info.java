@@ -18,10 +18,26 @@ Pointcut
 --------
 // указатель, на чем именно должен быть выполнен Advice  
   
-@Before("execution(public void getBook())")
-@Before("execution(public void aop.UniLibrary.getBook())")
-@Before("execution(public void get*())")
+@Before("execution(public void getBook())") указан только метод, подходит для любого класса
+@Before("execution(public void aop.UniLibrary.getBook())") указан точно пакет, класс и метод
+@Before("execution(public void get*())") любое название метода, начинающееся на get...
+@Before("execution(public void getBook(String))")  с указанием типа String одного параметра метода
+@Before("execution(public void get*(*))")  любое название метода, начинающееся на get... и с любым одним параметром внутри
+@Before("execution(public void get*(..))") любое название метода, начинающееся на get... и с любым кол-вом параметров (включая ноль) внутри
+@Before("execution(public void getBook(aop.Book))") указан метод для любого класса с одним параметром типа класса Book из пакета aop
+@Before("execution(public void getBook(aop.Book, ..))") как предыдущий, только + ещё сколько угодно доп. параметров у метода
 
 Правило написания Pointcut:
 execution(modifiers-pattern? return-type-pattern declaring-type-pattern? method-name-pattern(parameters-pattern) throws-pattern?)
+
+Объявление отдельных именованных Pointcut-ов:
+---------------------------------------------
+
+@Pointcut("execution(* get*())") 
+  private void allGetMethods() {  // будет доступен только в этом файле аспекта (т.к. private) по названию allGetMethods()
+}
+
+@Before("allGetMethods()")        // использование Pointcut в @Aspect
+public void beforeGetLoggingAdvice() {
+}
   
