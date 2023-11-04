@@ -85,7 +85,7 @@ Advice тип AfterThrowing
 ------------------------
 @AfterThrowing(pointcut = "execution(* getStudents())", 
                throwing = "myException") // возможность получить доступ 
-                                         // к ислючению до того, как оно всплывёт вверх из метода
+                                         // к исключению до того, как оно всплывёт вверх из метода
 public void afterThrowingGetStudentsLoggingAdvice(Throwable myException) { // названия совпадают, тип Throwable
 }
 
@@ -95,4 +95,18 @@ Advice тип After
 // выполнится в любом случае. Отсюда нет доступа к исключению.
 @After("execution(* getStudents())")
 public void afterGetStudentsLoggingAdvice(JoinPoint joinPoint) {
+}
+
+Advice тип Around
+-----------------
+@Around("execution(* getStudents())")
+    public Object aroundGetStudentsLoggingAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable { // связь с target методом
+      // действия до работы target метода
+
+      targetMethodResult = proceedingJoinPoint.proceed();
+
+      // targetMethodResult - получили результат работы target метода
+      // можно изменить этот результат
+      // действия после работы target метода
+      return targetMethodResult;
 }
