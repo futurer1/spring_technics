@@ -73,3 +73,10 @@ methodSignature.getMethod()     // public void aop.joinpoint.UniLibrary.addBook(
 methodSignature.getReturnType() // void
 methodSignature.getName()       // addBook
 
+Advice тип AfterReturning
+-------------------------
+@AfterReturning(pointcut = "execution(* getStudents())", returning = "students")
+public void afterReturningAdvice(JoinPoint joinPoint, // возможность так же использовать JoinPoint
+    List<Student> students) { // обязательно совпадение названия 
+                              // students с returning = "students" и типа с возвращаемым из метода
+}
