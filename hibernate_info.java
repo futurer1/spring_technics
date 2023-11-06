@@ -73,11 +73,11 @@ factory.close();
 @OneToOne(cascade = CascadeType.ALL) 
 // каскадная операция с сущностью может быть разных видов
 //CascadeType.ALL (включает в себя все типы)
-//CascadeType.DETACH
+//CascadeType.PERSIST
 //CascadeType.MERGE
 //CascadeType.REMOVE
-//CascadeType.PERSIST
 //CascadeType.REFRESH
+//CascadeType.DETACH
 
 @JoinColumn
 -----------
