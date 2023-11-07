@@ -107,5 +107,38 @@ private List<Employee> emps; // сотрудников много
 // удаление сотрудника не приводит к удалению департамента
 // удаление департамента приводит к удалению всех сотрудников
 
+@ManyToMany
+-----------
+// тип отношения таблиц "многие ко многим"
 
+// секция (сущность Section) включает в себя детей, которые в ней занимаются
+@JoinTable(
+    name = "child_section", // название таблицы с индексами для связи many to many
+    joinColumns = @JoinColumn(name = "section_id"), // название поля для target сущности Section и таблицы section
+    inverseJoinColumns = @JoinColumn(name = "child_id") // название поля для связи с Child
+)
+private List<Child> children;
 
+// доп. метод для добавления коллекции детей к секции
+public void addChildToSection(Child child) {
+    if (children == null) {
+        children = new ArrayList<>();
+    }
+    children.add(child);
+}
+
+// ребенок (сущность Child) включает в себя секции, в которых он занимается
+@JoinTable(
+    name = "child_section", // название таблицы с индексами для связи many to many
+    joinColumns = @JoinColumn(name = "child_id"), // название поля для target сущности Child и таблицы children
+    inverseJoinColumns = @JoinColumn(name = "section_id") // название поля для связи с Section
+)
+private List<Section> sections;
+
+// доп. метод для добавления коллекции секций к ребенку
+public void addSectionToChild(Section section) {
+    if (sections == null) {
+        sections = new ArrayList<>();
+    }
+    sections.add(section);
+}
