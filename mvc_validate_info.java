@@ -24,3 +24,20 @@ public String showEmpDetails(
 // не пустое значение, пробелы считатся пустым значением
 @NotBlank(message = "surname is empty")
 private String surname;
+
+@Min
+----
+@Min(value = 500, message = "must be >= than 500")
+private int salary;
+        
+@Max
+----
+@Max(value = 1000, message = "must be <= than 1000")
+private int salary;
+
+@Pattern
+--------
+// свой паттерн для валидации
+@Pattern(regexp = "\\d{3}-\\d{2}-\\d{2}", message = "Phone is incorrect. Pattern: XXX-XX-XX")
+private String phoneNumber;
+
