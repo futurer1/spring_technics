@@ -25,3 +25,10 @@ public String showEmpDetails1(
     Model model
 ) {
 }
+
+@ModelAttribute
+---------------
+// при работе с формами @ModelAttribute в параметре метода даёт доступ к объекту Модели class Employee
+@RequestMapping("/showDetails")
+public String showEmpDetails(@ModelAttribute("employee") Employee emp) {
+}
