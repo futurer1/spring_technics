@@ -26,7 +26,7 @@ session.getTransaction().commit();
 // по id
 Employee myEmployee = session.get(Employee.class, 1);
 // по нескольким параметрам
-List<Employee> emps = session.createQuery("from Employee "
+List<Employee> emps = session.createQuery("from Employee " // Employee - название класса
     + "where surname='Ivanov' and salary > 500") // surname - название поля в классе, а не столбца в таблице
     .getResultList();
 
