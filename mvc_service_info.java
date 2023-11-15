@@ -42,6 +42,8 @@ public List<Employee> getAllEmployees() {
 --------------
 // передаёт Spring работу с транзакциями (открытие, закрытие, коммит)
 // используется в сервисе
+// требует добавления в applicationContext.xml
+<tx:annotation-driven transaction-manager="transactionManager" />
 
 @Controller
 -----------
@@ -49,3 +51,42 @@ public List<Employee> getAllEmployees() {
 // имплементирует в себя сервис @Service EmployeeService
 @Autowired
 private EmployeeService employeeService;
+
+----------
+|  VIEW  |
+----------
+// Передача параметров из view  в controller
+<c:url var="editButton" value="/editEmployee">
+    <c:param name="empId" value="${emp.id}"/>
+</c:url>
+
+<input type="button" value="edit" onclick="window.location.href = '${editButton}'"/>
+
+// использование в самом контроллере
+@RequestMapping("/editEmployee")
+    public String editEmployee(@RequestParam("empId") int empId, Model model) {
+
+        return "redirect:/"; // возможность делать редирект из одного метода контроллера в другой
+}
+
+
+// Передача модели из view в controller
+
+<form:form action="saveEmployee" modelAttribute="employee">
+    <form:hidden path="id"/>
+    Name <form:input path="name"/>
+    <input type="submit" value="ok"/>
+</form:form>
+
+// использование в самом контроллере
+
+@RequestMapping("/saveEmployee")
+public String saveEmployee(@ModelAttribute("employee") Employee employee) {
+
+    if (bindingResult.hasErrors()) {
+        return "employee-info";
+    } else {
+        employeeService.saveEmployee(employee);
+        return "redirect:/"; // переадресация на /
+    }
+}
