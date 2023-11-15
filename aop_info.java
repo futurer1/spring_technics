@@ -110,3 +110,16 @@ Advice тип Around
       // действия после работы target метода
       return targetMethodResult;
 }
+
+// Если пользоваться applicationContext.xml, то в него надо добавить
+--------------------------------------------------------------------
+<beans 
+...
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="
+	  ...
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+...
+<aop:aspectj-autoproxy/>
