@@ -15,6 +15,7 @@ public class MyController {
 @RequestMapping
 ---------------
 // связь с end point URL
+@RequestMapping(path = "/someUrl", method = RequestMethod.GET) // может быть указан метод GET, POST и т.д.
 
 @RequestParam
 -------------
