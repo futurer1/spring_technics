@@ -86,4 +86,23 @@ public String delEmployee(@PathVariable int id) {
     employeeService.delEmployee(id);
     return "Employee ID = " + id + " was deleted.";
 }
+
+@ControllerAdvice
+-----------------
+// контроллер, который выполняется каждый раз при вызове методов основного контроллера @Controller
+// в этом контроллере можно, например, ловить все исключения, которые возникают в основном контроллере
+
+@ExceptionHandler
+-----------------
+// обозначение метода обработчком исключения
+    
+@ExceptionHandler // ловит все исключения типа NoSuchEmployeeException
+public ResponseEntity<EmployeeIncorrectData> /*Объект класса EmployeeIncorrectData будет преобразован в JSON*/ handleException(
+        NoSuchEmployeeException exception // метод будет реагировать на этот тип Exception
+) {
+    EmployeeIncorrectData data = new EmployeeIncorrectData();
+    data.setInfo(exception.getMessage());
+
+    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+}
   
