@@ -18,3 +18,14 @@ public class SpringCourseSpringbootApplication {
     }
 }
 
+
+Spring Boot DevTools
+--------------------
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+
+// see https://stackoverflow.com/questions/33869606/intellij-15-springboot-devtools-livereload-not-working
