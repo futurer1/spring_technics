@@ -44,3 +44,23 @@ GET    employees/{employeeId}    получение одного
 POST   employees                 добавление одного
 PUT    employees/{id}            изменение одного (наличие primary key id в теле запроса не обязательно)
 DELETE employees                 удаление одного
+
+Spring Boot Actuator
+--------------------
+// для мониторинга приложения
+    
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+
+/actuator/health      статус приложение (UP)
+/actuator/info        (располагается в application.properties)
+/actuator/beans       информация о бинах
+/actuator/mappings    информация о маппингах
+
+// для доступа к мониторингу через логин и пароль
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
