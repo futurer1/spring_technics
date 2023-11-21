@@ -21,6 +21,7 @@ public class SpringCourseSpringbootApplication {
 
 Spring Boot DevTools
 --------------------
+// автоматический перезапуск сервера после внесения изменений в проект Spring
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
 
 <dependency>
@@ -29,3 +30,17 @@ Spring Boot DevTools
 </dependency>
 
 // see https://stackoverflow.com/questions/33869606/intellij-15-springboot-devtools-livereload-not-working
+
+Spring Data REST
+----------------
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-rest</artifactId>
+</dependency>
+
+GET    employees                 получение списка
+GET    employees/{employeeId}    получение одного
+POST   employees                 добавление одного
+PUT    employees/{id}            изменение одного (наличие primary key id в теле запроса не обязательно)
+DELETE employees                 удаление одного
