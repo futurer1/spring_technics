@@ -65,6 +65,23 @@ factory.close();
 // стратегия автогенерации значения для Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 
+@CreationTimestamp
+------------------
+// подстановка системной даты и времени в качестве значения
+@CreationTimestamp
+private LocalDateTime firstLoginDate;
+
+@Enumerated
+-----------
+// в качестве значения будет одно из ENUM значений, которое находится в ENUM объекте UserState
+// тип значения - строка (EnumType.STRING)
+@Enumerated(EnumType.STRING)
+private UserState state;
+
+
+
+
+
 @OneToOne
 ---------
 // тип отношения таблиц "один к одному"
