@@ -1,8 +1,10 @@
 Для работы с JSON:
 ------------------
 ```xml
-<groupId>com.fasterxml.jackson.core</groupId>
-<artifactId>jackson-databind</artifactId>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
 ```
 
 У класса, повторяющего структуру JSON должна быть аннотация @Data
@@ -21,4 +23,13 @@ try {
 }
 
 
+```
+
+Для использования Lombok:
+-------------------------
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
 ```
