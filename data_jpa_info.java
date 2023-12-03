@@ -18,4 +18,11 @@ deleteById - удаление работника
 
 Аннотация @Transactional у методов сервиса не нужна, т.к. Spring Data и Spring JPA автоматически обеспечать транзакционность.
   
-  
+
+Кастомный запрос к базе на основе JpaRepository
+-----------------------------------------------
+public interface DataMessageDAO extends JpaRepository<DataMessage, Long> {
+    @Query(value = "SELECT * FROM data_messages dm WHERE dm.chat_id = :chatId ORDER BY dm.create_date DESC LIMIT :limit",
+            nativeQuery = true)
+    Optional<List<DataMessage>> findLastMessagesByChatId(@Param("chatId") Long chatId, @Param("limit") Integer limit);
+}
