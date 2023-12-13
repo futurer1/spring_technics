@@ -36,6 +36,7 @@ public interface DataMessageDAO extends JpaRepository<DataMessage, Long> {
 
 
 Ещё один способ использования JPA:
+----------------------------------
 Применение собственной Spring-спецификации в виде реализации функционального интерфейса Specification с предикатом для секции `WHERE`.
 
 ```java
