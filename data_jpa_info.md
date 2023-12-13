@@ -13,11 +13,13 @@ private EmployeeRepository employeeRepository;
 
 Методы EmployeeRepository
 -------------------------
+```
 findAll    - получение всех работников
 findById   - получение одного работника
 save       - добавление нового работника
 save       - изменение имеющегося работника
 deleteById - удаление работника
+```
 
 Аннотация @Transactional у методов сервиса не нужна, т.к. Spring Data и Spring JPA автоматически обеспечать транзакционность.
   
@@ -30,6 +32,25 @@ public interface DataMessageDAO extends JpaRepository<DataMessage, Long> {
             nativeQuery = true)
     Optional<List<DataMessage>> findLastMessagesByChatId(@Param("chatId") Long chatId, @Param("limit") Integer limit);
 }
+```
+
+
+Ещё один способ использования JPA:
+Применение собственной Spring-спецификации в виде реализации функционального интерфейса Specification с предикатом для секции `WHERE`.
+
+```java
+public interface Specification<T> {
+  Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder);
+}
+
+public static Specification<Customer> isLondTermCustomer() {
+  return (root, query, builder) -> {
+    LocalDate date = LocalDate.now().minusYears(2);
+    return builder.lessThan(root.get(Customer_.createdAt), date);
+  };
+}
+
+List<Customer> customers = customerRepository.findAll(isLondTermCustomer);
 ```
 
 
