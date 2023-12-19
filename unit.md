@@ -14,3 +14,6 @@
 
 @Test
 @MockBean
+
+@LocalServerPort
+private int randomServerPort;
