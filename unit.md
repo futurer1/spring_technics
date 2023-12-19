@@ -9,4 +9,8 @@
 @DataMongoTest для тестирования кода, связанного с MongoDB
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 @ActiveProfiles("dev")
+
+@Test
+@MockBean
