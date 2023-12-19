@@ -7,3 +7,5 @@
 @JsonTest для проверки сериализации и десериализации JSON
 @RestClientTest чтобы протестировать RestTemplate
 @DataMongoTest для тестирования кода, связанного с MongoDB
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
