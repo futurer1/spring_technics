@@ -4,6 +4,7 @@
 
 Также доступны аннотации для других нишевых частей вашего приложения:
 
+```
 @JsonTest для проверки сериализации и десериализации JSON
 @RestClientTest чтобы протестировать RestTemplate
 @DataMongoTest для тестирования кода, связанного с MongoDB
@@ -17,3 +18,9 @@
 
 @LocalServerPort
 private int randomServerPort;
+
+// https://www.youtube.com/watch?v=CVGmIp9Wv68&t=223s
+@Testcontainers на классе
+@Container
+private PostgreSQLContainer pg = new PostgreSQLContainer("postgres.13.10");
+```
