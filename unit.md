@@ -25,7 +25,7 @@ private int randomServerPort;
 private PostgreSQLContainer pg = new PostgreSQLContainer("postgres.13.10");
 ```
 
-https://alexkosarev.name/2022/12/29/spring-in-a-nutshell-testing-rest-services/
+[https://alexkosarev.name/2022/12/29/spring-in-a-nutshell-testing-rest-services/](https://alexkosarev.name/2022/12/29/spring-in-a-nutshell-testing-rest-services/)
 ```xml
 <dependencies>
         <dependency>
@@ -114,3 +114,175 @@ class TasksRestControllerTest {
     }
 }
 ```
+
+проверка негативного сценария, приводящего к ошибке
+```java
+@ExtendWith(MockitoExtension.class)
+class TasksRestControllerTest {
+
+    @Test
+    void handleCreateNewTask_PayloadIsInvalid_ReturnsValidResponseEntity() {
+        // given
+        var details = "   ";
+        var locale = Locale.US;
+        var errorMessage = "Details is empty";
+
+        doReturn(errorMessage).when(this.messageSource)
+                .getMessage("tasks.create.details.errors.not_set", new Object[0], locale);
+
+        // when
+        var responseEntity = this.controller.handleCreateNewTask(new NewTaskPayload(details),
+                UriComponentsBuilder.fromUriString("http://localhost:8080"), locale);
+
+        // then
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
+        assertEquals(new ErrorsPresentation(List.of(errorMessage)), responseEntity.getBody());
+
+        verifyNoInteractions(taskRepository);
+    }
+}
+```
+
+## Интеграционные тесты
+Для интеграционных тестов потребуется работающий контекст приложения, что достигается добавлением аннотации `@SpringBootTest` к тестовому классу.
+Для имитации HTTP-запросов потребуется экземпляр MockMvc, его можно сконфигурировать вручную, но Spring Boot предоставляет возможность сконфигурировать его автоматически при помощи аннотации `@AutoConfigureMockMvc`.
+
+Очистка репозитория после каждого теста (`@AfterEach`):
+```java
+@SpringBootTest
+@AutoConfigureMockMvc(printOnlyOnFailure = false)
+class TasksRestControllerIT {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    InMemTaskRepository taskRepository;
+
+    @AfterEach
+    void tearDown() {
+        this.taskRepository.getTasks().clear();
+    }
+}
+```
+
+Делается HTTP-запрос через сервис MockMvc.perform и проверяется результат.
+```java
+@SpringBootTest
+@AutoConfigureMockMvc(printOnlyOnFailure = false)
+class TasksRestControllerIT {
+
+    @Test
+    void handleGetAllTasks_ReturnsValidResponseEntity() throws Exception {
+        // given
+        var requestBuilder = get("/api/tasks");
+        this.taskRepository.getTasks()
+                .addAll(List.of(new Task(UUID.fromString("71117396-8694-11ed-9ef6-77042ee83937"),
+                                "Первая задача", false),
+                        new Task(UUID.fromString("7172d834-8694-11ed-8669-d7b17d45fba8"),
+                                "Вторая задача", true)));
+
+        // when
+        this.mockMvc.perform(requestBuilder)
+                // then
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json("""
+                                [
+                                    {
+                                        "id": "71117396-8694-11ed-9ef6-77042ee83937",
+                                        "details": "Первая задача",
+                                        "completed": false
+                                    },
+                                    {
+                                        "id": "7172d834-8694-11ed-8669-d7b17d45fba8",
+                                        "details": "Вторая задача",
+                                        "completed": true
+                                    }
+                                ]
+                                """)
+                );
+
+    }
+}
+```
+
+Другие тесты для проверки изменений в репозитории
+```java
+@SpringBootTest
+@AutoConfigureMockMvc
+class TasksRestControllerIT {
+
+    @Test
+    void handleCreateNewTask_PayloadIsValid_ReturnsValidResponseEntity() throws Exception {
+        // given
+        var requestBuilder = post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "details": "Третья задача"
+                        }
+                        """);
+
+        // when
+        this.mockMvc.perform(requestBuilder)
+                // then
+                .andExpectAll(
+                        status().isCreated(),
+                        header().exists(HttpHeaders.LOCATION),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json("""
+                                {
+                                    "details": "Третья задача",
+                                    "completed": false
+                                }
+                                """),
+                        jsonPath("$.id").exists()
+                );
+
+        assertEquals(1, this.taskRepository.getTasks().size());
+
+        final var task = this.taskRepository.getTasks().get(0);
+        assertNotNull(task.id());
+        assertEquals("Третья задача", task.details());
+        assertFalse(task.completed());
+    }
+
+    @Test
+    void handleCreateNewTask_PayloadIsInvalid_ReturnsValidResponseEntity() throws Exception {
+        // given
+        var requestBuilder = post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
+                .content("""
+                        {
+                            "details": null
+                        }
+                        """);
+
+        // when
+        this.mockMvc.perform(requestBuilder)
+                // then
+                .andExpectAll(
+                        status().isBadRequest(),
+                        header().doesNotExist(HttpHeaders.LOCATION),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json("""
+                                {
+                                    "errors": ["Task details must be set"]
+                                }
+                                """, true)
+                );
+
+        assertTrue(this.taskRepository.getTasks().isEmpty());
+    }
+}
+```
+
+## Ссылки
+- [Тестирование в Spring Framework](https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html#testing-introduction)
+- [Про Junit](https://junit.org/junit5/docs/current/user-guide/)
+- [Про Mockito](https://site.mockito.org/)
