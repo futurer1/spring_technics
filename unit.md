@@ -24,3 +24,31 @@ private int randomServerPort;
 @Container
 private PostgreSQLContainer pg = new PostgreSQLContainer("postgres.13.10");
 ```
+
+https://alexkosarev.name/2022/12/29/spring-in-a-nutshell-testing-rest-services/
+```xml
+<dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+
+## Модульные тесты
+
+```java
+@ExtendWith(MockitoExtension.class) // Чтобы Mockito сам создал необходимые mock-объекты, необходимо добавить расширение Mockito к классу
+class TasksRestControllerTest {
+
+    @Mock
+    TaskRepository taskRepository;
+
+    @Mock
+    MessageSource messageSource;
+
+    @InjectMocks // Чтобы Mockito создал экземпляр тестируемого класса и передал mock-объекты в качестве аргументов его конструктора
+    TasksRestController controller;
+}
+```
