@@ -78,3 +78,39 @@ class TasksRestControllerTest {
     }
 }
 ```
+
+проверка, что запрос на создание с валидными данными приводит к валидному результату
+```java
+@ExtendWith(MockitoExtension.class)
+class TasksRestControllerTest {
+
+    @Test
+    void handleCreateNewTask_PayloadIsValid_ReturnsValidResponseEntity() { // название тестируемого метода, условие выполнения теста и ожидаемый результат
+        // given
+        var details = "Третья задача";
+
+        // when
+        var responseEntity = this.controller.handleCreateNewTask(new NewTaskPayload(details),
+                UriComponentsBuilder.fromUriString("http://localhost:8080"), Locale.ENGLISH);
+
+        // then
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
+        if (responseEntity.getBody() instanceof Task task) {
+            assertNotNull(task.id());
+            assertEquals(details, task.details());
+            assertFalse(task.completed());
+
+            assertEquals(URI.create("http://localhost:8080/api/tasks/" + task.id()),
+                    responseEntity.getHeaders().getLocation());
+
+            verify(this.taskRepository).save(task);
+        } else {
+            assertInstanceOf(Task.class, responseEntity.getBody());
+        }
+
+        verifyNoMoreInteractions(this.taskRepository); // проверка отсутствия каких-либо обращений кроме тех, что ожидали
+    }
+}
+```
