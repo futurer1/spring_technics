@@ -52,3 +52,29 @@ class TasksRestControllerTest {
     TasksRestController controller;
 }
 ```
+
+`Mock.doReturn` - указывает, что должно быть возвращено при вызове метода mock-объекта
+
+```java
+@ExtendWith(MockitoExtension.class)
+class TasksRestControllerTest {
+
+    @Test
+    @DisplayName("GET /api/tasks возвращает HTTP-ответ со статусом 200 OK и списком задач")
+    void handleGetAllTasks_ReturnsValidResponseEntity() {
+        // given
+        var tasks = List.of(new Task(UUID.randomUUID(), "Первая задача", false),
+                new Task(UUID.randomUUID(), "Вторая задача", true));
+        doReturn(tasks).when(this.taskRepository).findAll();
+
+        // when
+        var responseEntity = this.controller.handleGetAllTasks();
+
+        // then
+        assertNotNull(responseEntity); // проверка, что не null
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // код ответа 200 OK
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType()); // в ответе тип данных JSON
+        assertEquals(tasks, responseEntity.getBody()); 
+    }
+}
+```
