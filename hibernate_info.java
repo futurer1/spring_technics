@@ -124,7 +124,9 @@ private List<Employee> emps; // сотрудников много
 // удаление сотрудника не приводит к удалению департамента
 // удаление департамента приводит к удалению всех сотрудников
 
-@OneToMany(mappedBy = "field", orphanRemoval = true, cascade = CascadeType.ALL)
+@OneToMany(mappedBy = "topic", orphanRemoval = true, cascade = CascadeType.ALL)
+// orphanRemoval = true; при удалении комментария из списка комментариев топика, комментарий удаляется из базы
+// orphanRemoval=false; при удалении комментария из списка, в базе комментарий остается. Его внешний ключ (comment.topic_id) обнуляется, и  больше комментарий не ссылается на топик
 
 @ManyToMany
 -----------
