@@ -124,6 +124,8 @@ private List<Employee> emps; // сотрудников много
 // удаление сотрудника не приводит к удалению департамента
 // удаление департамента приводит к удалению всех сотрудников
 
+@OneToMany(mappedBy = "field", orphanRemoval = true, cascade = CascadeType.ALL)
+
 @ManyToMany
 -----------
 // тип отношения таблиц "многие ко многим"
